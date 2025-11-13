@@ -1,5 +1,7 @@
 <h1>Danh sách khách mời</h1>
-
+<?php 
+    $guests = App\Models\Guest::all();
+    ?>
 <div style="display: flex; flex-wrap: wrap; gap: 20px;">
     @foreach ($guests as $guest)
         <div style="border: 1px solid #ccc; border-radius: 10px; padding: 16px; width: 220px; text-align: center;">
