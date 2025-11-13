@@ -1,0 +1,1 @@
+<h1>Chỗ này hiện QR code, với thông tin, kèm status =1. number = 0 ( ẩn)</h1>
