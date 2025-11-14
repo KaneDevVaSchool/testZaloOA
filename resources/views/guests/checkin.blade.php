@@ -10,12 +10,8 @@
 
     {{-- Thông tin khách --}}
     <div id="guestInfo">
-        @if ($guest->status && $guest->number)
-            <p><strong>Họ tên:</strong> <span id="guestName">{{ $guest->full_name }}</span></p>
-            <p><strong>Số điện thoại:</strong> <span id="guestPhone">{{ $guest->phone }}</span></p>
-        @else
-Thông tin khách mời
-        @endif
+        <p><strong>Họ tên:</strong> <span id="guestName">{{ $guest->status ? $guest->full_name : '---' }}</span></p>
+        <p><strong>Số điện thoại:</strong> <span id="guestPhone">{{ $guest->status ? $guest->phone : '---' }}</span></p>
     </div>
 
     <p><strong>Trạng thái:</strong>
@@ -41,20 +37,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let alerted = false;
 
     async function pollStatus() {
-        if(alerted) return;
-
         try {
             const res = await fetch("{{ route('guests.status', $guest->qr_token) }}");
             const data = await res.json();
 
-            if(data.status) {
+            if(data.status && !alerted) {
                 alerted = true;
 
                 // Update trực tiếp trên page
                 document.getElementById('guestStatus').textContent = 'Đã đến';
                 document.getElementById('guestStatus').className = 'text-green-600 font-bold';
-                document.getElementById('guestNumber').textContent = data.number;
 
+                document.getElementById('guestNumber').textContent = data.number;
                 document.getElementById('guestName').textContent = data.full_name;
                 document.getElementById('guestPhone').textContent = data.phone;
                 document.getElementById('guestCongrats').style.display = 'inline';
@@ -70,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Poll mỗi 3 giây
-    setInterval(pollStatus, 3000);
+    // Poll mỗi 1 giây để gần như realtime
+    setInterval(pollStatus, 1000);
 });
 </script>
 @endsection
