@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\GuestController;
+use App\Http\Controllers\Api\ZnsController;
 
 Route::prefix('guests')->group(function () {
     Route::get('/{qr_token}', [GuestController::class, 'showByQr'])->name('api.guests.show');
@@ -11,3 +12,5 @@ Route::prefix('guests')->group(function () {
     Route::get('/qr-image/{qr_token}', [GuestController::class, 'qrImage'])->name('api.guests.qr_image');
     Route::get('/status/{qr_token}', [GuestController::class, 'status'])->name('api.guests.status');
 });
+
+Route::get('/zns/list', [ZnsController::class, 'listGuests'])->name('api.zns.list');
