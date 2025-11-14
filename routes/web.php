@@ -19,4 +19,12 @@ Route::prefix('guests')->group(function () {
 
     // Scan QR (POST)
     Route::post('/scan', [GuestController::class, 'scanQr'])->name('guests.qr.scan');
+    Route::get('/status/{qr_token}', function ($qr_token) {
+        $guest = \App\Models\Guest::where('qr_token', $qr_token)->firstOrFail();
+        return response()->json([
+            'status' => $guest->status,
+            'number' => $guest->number,
+        ]);
+    })->name('guests.status');
+
 });
