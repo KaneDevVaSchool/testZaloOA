@@ -26,6 +26,8 @@ Route::prefix('guests')->group(function () {
         return response()->json([
             'status' => $guest->status,
             'number' => $guest->number,
+            'full_name' => $guest->full_name,
+            'phone' => $guest->phone,
         ]);
     })->name('guests.status');
 
