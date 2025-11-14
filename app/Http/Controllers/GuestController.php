@@ -25,8 +25,8 @@ class GuestController extends Controller
     }
     public function checkInQRCode(string $qr_checkin_cus)
     {
-        $dataCheckinCus = Guest::where('qr_token', $qr_checkin_cus)->firstOrFail();
-        return view('guests.checkin', compact('dataCheckinCus'));
+        $guest = Guest::where('qr_token', $qr_checkin_cus)->firstOrFail();
+        return view('guests.checkin', compact('guest'));
     }
 
     // Scan QR và check-in

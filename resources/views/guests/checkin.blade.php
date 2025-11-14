@@ -1,95 +1,68 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="container mx-auto p-4 max-w-md text-center">
-        <h2 class="text-2xl font-bold mb-4"> Vé QR Code khách mời</h2>
+<div class="container mx-auto p-4 max-w-md text-center">
+    <h2 class="text-2xl font-bold mb-4">Vé QR Code khách mời</h2>
 
-
-        <div class="inline-block bg-white p-4 shadow rounded mb-4">
-            <img src="{{ route('guests.qr.image', $dataCheckinCus->qr_token) }}" alt="QR Code">
-        </div>
-        @if ($dataCheckinCus->status == 1)
-            <p><strong>Họ tên:</strong> {{ $dataCheckinCus->full_name }}</p>
-            <p><strong>Số điện thoại:</strong> {{ $dataCheckinCus->phone }}</p>
-      
-        @endif
-        </p>
-        {{-- 
-    <p><strong>Họ tên:</strong> {{ $dataCheckinCus->full_name }}</p>
-    <p><strong>Số điện thoại:</strong> {{ $dataCheckinCus->phone }}</p>
-    <p><strong>Trạng thái:</strong> 
-        @if ($dataCheckinCus->status)
-            <span class="text-green-600 font-bold">Đã đến</span>
-        @else
-            <span class="text-red-600 font-bold">Chưa đến</span>
-        @endif
-    </p> --}}
-
-        {{-- chỗ này sẽ gửi lại mã dự thưởng khi checkin --}}
-        @if (!$dataCheckinCus->status)
-            <p class="mt-4"><strong>Mã dự thưởng:</strong> Sẽ được cấp khi xác nhận</p>
-        @else
-            <p class="mt-4"><strong>Mã dự thưởng:</strong> {{ $dataCheckinCus->number }}</p>
-            <span class="text-green-600 font-bold">Chúc mừng bạn đã đến</span>
-        @endif
+    <div class="inline-block bg-white p-4 shadow rounded mb-4">
+        <img src="{{ route('guests.qr.image', $guest->qr_token) }}" alt="QR Code">
     </div>
 
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <p><strong>Họ tên:</strong> {{ $guest->full_name }}</p>
+    <p><strong>Số điện thoại:</strong> {{ $guest->phone }}</p>
+    <p><strong>Trạng thái:</strong>
+        <span id="guestStatus" class="{{ $guest->status ? 'text-green-600 font-bold' : 'text-red-600 font-bold' }}">
+            {{ $guest->status ? 'Đã đến' : 'Chưa đến' }}
+        </span>
+    </p>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const btn = document.getElementById('checkinBtn');
-            if (!btn) return;
+    <p class="mt-4">
+        <strong>Mã dự thưởng:</strong>
+        <span id="guestNumber">
+            {{ $guest->status ? $guest->number : 'Sẽ được cấp khi xác nhận' }}
+        </span>
+    </p>
 
-            btn.addEventListener('click', async () => {
-                try {
-                    const res = await fetch("{{ route('guests.qr.scan') }}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                        },
-                        body: JSON.stringify({
-                            qr_token: "{{ $dataCheckinCus->qr_token }}"
-                        })
-                    });
+    @if($guest->status)
+        <span class="text-green-600 font-bold">Chúc mừng bạn đã đến</span>
+    @endif
+</div>
 
-                    const data = await res.json();
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-                    if (data.ok) {
-                        // Sinh lucky code client-side
-                        const luckyCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    let alerted = false;
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Check-in thành công!',
-                            html: `
-                        <p>Mã dự thưởng: <strong>${data.dataCheckinCus.number}</strong></p>
-          
-                    `,
-                            confirmButtonText: 'OK'
-                        }).then(() => location.reload());
+    async function checkStatus() {
+        if(alerted) return;
 
-                        // Gửi lucky code về server nếu muốn lưu
+        try {
+            const res = await fetch("{{ route('guests.status', $guest->qr_token) }}");
+            const data = await res.json();
 
+            if(data.status) {
+                alerted = true;
 
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Lỗi',
-                            text: data.message || 'Lỗi khi check-in'
-                        });
-                    }
-                } catch (err) {
-                    console.error(err);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Lỗi',
-                        text: 'Có lỗi xảy ra'
-                    });
-                }
-            });
-        });
-    </script>
+                // Cập nhật trạng thái trên page
+                document.getElementById('guestStatus').textContent = 'Đã đến';
+                document.getElementById('guestStatus').className = 'text-green-600 font-bold';
+                document.getElementById('guestNumber').textContent = data.number;
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Check-in thành công!',
+                    html: `<p>Mã dự thưởng: <strong>${data.number}</strong></p>`
+                });
+            }
+        } catch(err) {
+            console.error(err);
+        }
+    }
+
+    // Poll status mỗi 3 giây
+    setInterval(checkStatus, 3000);
+});
+</script>
 @endsection

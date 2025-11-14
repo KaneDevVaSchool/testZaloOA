@@ -4,34 +4,31 @@
 <div class="container mx-auto p-4 max-w-md text-center">
     <h2 class="text-2xl font-bold mb-4">QR Code khách mời</h2>
 
-
-
     <p><strong>Họ tên:</strong> {{ $guest->full_name }}</p>
     <p><strong>Số điện thoại:</strong> {{ $guest->phone }}</p>
-    <p><strong>Trạng thái:</strong> 
-        @if($guest->status)
-            <span class="text-green-600 font-bold">Đã đến</span>
-        @else
-            <span class="text-red-600 font-bold">Chưa đến</span>
-        @endif
+    <p><strong>Trạng thái:</strong>
+        <span id="guestStatusAdmin" class="{{ $guest->status ? 'text-green-600 font-bold' : 'text-red-600 font-bold' }}">
+            {{ $guest->status ? 'Đã đến' : 'Chưa đến' }}
+        </span>
+    </p>
+
+    <p class="mt-4"><strong>Mã dự thưởng:</strong>
+        <span id="guestNumberAdmin">{{ $guest->status ? $guest->number : 'Sẽ được cấp khi xác nhận' }}</span>
     </p>
 
     @if(!$guest->status)
         <button id="checkinBtn" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
             Xác nhận đến
         </button>
-    @else
-        <p class="mt-4"><strong>Mã dự thưởng:</strong> {{ $guest->number }}</p>
     @endif
 </div>
 
-<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('checkinBtn');
-    if (!btn) return;
+    if(!btn) return;
 
     btn.addEventListener('click', async () => {
         try {
@@ -46,9 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await res.json();
 
-            if (data.ok) {
-                // Sinh lucky code client-side
+            if(data.ok) {
                 const luckyCode = Math.random().toString(36).substring(2,10).toUpperCase();
+
+                // Cập nhật trạng thái trên page ngay lập tức
+                document.getElementById('guestStatusAdmin').textContent = 'Đã đến';
+                document.getElementById('guestStatusAdmin').className = 'text-green-600 font-bold';
+                document.getElementById('guestNumberAdmin').textContent = data.guest.number;
 
                 Swal.fire({
                     icon: 'success',
@@ -58,11 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p>Mã may mắn: <strong>${luckyCode}</strong></p>
                     `,
                     confirmButtonText: 'OK'
-                }).then(() => location.reload());
-
-                // Gửi lucky code về server nếu muốn lưu
-      
-
+                });
             } else {
                 Swal.fire({
                     icon: 'error',
