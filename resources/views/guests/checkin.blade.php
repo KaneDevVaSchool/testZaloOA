@@ -7,10 +7,11 @@
         <div class="inline-block bg-white p-4 shadow rounded mb-4">
             <img src="{{ route('guests.qr.image', $guest->qr_token) }}" alt="QR Code">
         </div>
-        @if ($guest->number)
+        @if ($guest->status && $guest->number)
             <p><strong>Họ tên:</strong> {{ $guest->full_name }}</p>
             <p><strong>Số điện thoại:</strong> {{ $guest->phone }}</p>
         @endif
+
 
         <p><strong>Trạng thái:</strong>
             <span id="guestStatus" class="{{ $guest->status ? 'text-green-600 font-bold' : 'text-red-600 font-bold' }}">
