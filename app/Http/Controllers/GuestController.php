@@ -49,7 +49,7 @@ class GuestController extends Controller
         $url = route('guests.qr.show', ['qr_token' => $guest->qr_token]);
 
         $svg = QrCode::size(300)->format('svg')->generate($url);
-        echo $url;
+        var_dump($url);
         return response($svg)->header('Content-Type', 'image/svg+xml');
     }
 }
