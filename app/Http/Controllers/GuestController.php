@@ -23,6 +23,11 @@ class GuestController extends Controller
         $guest = Guest::where('qr_token', $qr_token)->firstOrFail();
         return view('guests.qr', compact('guest'));
     }
+    public function checkInQRCode(string $qr_checkin_cus)
+    {
+        $dataCheckinCus = Guest::where('qr_token', $qr_checkin_cus)->firstOrFail();
+        return view('guests.checkin', compact('dataCheckinCus'));
+    }
 
     // Scan QR và check-in
     public function scanQr(ScanGuestRequest $request)
@@ -49,7 +54,7 @@ class GuestController extends Controller
         $url = route('guests.qr.show', ['qr_token' => $guest->qr_token]);
 
         $svg = QrCode::size(300)->format('svg')->generate($url);
-        
+
         return response($svg)->header('Content-Type', 'image/svg+xml');
     }
 }

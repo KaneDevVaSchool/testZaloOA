@@ -15,6 +15,8 @@ Route::prefix('guests')->group(function () {
 
     // QR routes
     Route::get('/qr/{qr_token}', [GuestController::class, 'showByQr'])->name('guests.qr.show'); // xem info khi quét QR
+    Route::get('/qr-checkin/{qr_token}', [GuestController::class, 'checkInQRCode'])->name('guests.qr.checkin'); // xem info khi quét QR
+
     Route::get('/qr-image/{qr_token}', [GuestController::class, 'qrImage'])->name('guests.qr.image'); // sinh QR image
 
     // Scan QR (POST)
