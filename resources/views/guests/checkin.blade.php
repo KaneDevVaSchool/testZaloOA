@@ -14,8 +14,7 @@
             <p><strong>Họ tên:</strong> <span id="guestName">{{ $guest->full_name }}</span></p>
             <p><strong>Số điện thoại:</strong> <span id="guestPhone">{{ $guest->phone }}</span></p>
         @else
-            <p><strong>Họ tên:</strong> <span id="guestName">---</span></p>
-            <p><strong>Số điện thoại:</strong> <span id="guestPhone">---</span></p>
+Thông tin khách mời
         @endif
     </div>
 

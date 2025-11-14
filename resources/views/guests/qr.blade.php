@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
 
             if(data.ok) {
-                const luckyCode = Math.random().toString(36).substring(2,10).toUpperCase();
+
 
                 // Cập nhật trạng thái trên page ngay lập tức
                 document.getElementById('guestStatusAdmin').textContent = 'Đã đến';
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: 'Check-in thành công!',
                     html: `
                         <p>Mã dự thưởng: <strong>${data.guest.number}</strong></p>
-                        <p>Mã may mắn: <strong>${luckyCode}</strong></p>
+          
                     `,
                     confirmButtonText: 'OK'
                 });
