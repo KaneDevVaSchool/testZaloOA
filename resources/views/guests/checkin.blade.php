@@ -4,10 +4,10 @@
     <div class="container mx-auto p-4 max-w-md text-center">
         <h2 class="text-2xl font-bold mb-4"> Vé QR Code khách mời</h2>
 
+
         <div class="inline-block bg-white p-4 shadow rounded mb-4">
             <img src="{{ route('guests.qr.image', $dataCheckinCus->qr_token) }}" alt="QR Code">
         </div>
-
         @if ($dataCheckinCus->status == 1)
             <p><strong>Họ tên:</strong> {{ $dataCheckinCus->full_name }}</p>
             <p><strong>Số điện thoại:</strong> {{ $dataCheckinCus->phone }}</p>
