@@ -8,23 +8,6 @@
         <img src="{{ route('guests.qr.image', $guest->qr_token) }}" alt="QR Code">
     </div>
 
-    <p><strong>Họ tên:</strong> {{ $guest->full_name }}</p>
-    <p><strong>Số điện thoại:</strong> {{ $guest->phone }}</p>
-    <p><strong>Trạng thái:</strong> 
-        @if($guest->status)
-            <span class="text-green-600 font-bold">Đã đến</span>
-        @else
-            <span class="text-red-600 font-bold">Chưa đến</span>
-        @endif
-    </p>
-
-    @if(!$guest->status)
-        <button id="checkinBtn" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            Xác nhận đến
-        </button>
-    @else
-        <p class="mt-4"><strong>Mã dự thưởng:</strong> {{ $guest->number }}</p>
-    @endif
 </div>
 
 <!-- SweetAlert2 -->
