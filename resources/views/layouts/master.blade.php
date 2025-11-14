@@ -1,21 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <!-- SEO + Charset -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Primary Meta Tags -->
+    <title>VA School – Xác nhận tham dự & nhận số dự thưởng</title>
+    <meta name="title" content="VA School – Xác nhận tham dự & nhận số dự thưởng" />
+    <meta name="description"
+        content="Trang xác nhận tham dự sự kiện VA School. Kiểm tra trạng thái check-in và nhận số dự thưởng ngay sau khi quét mã QR." />
 
-    <!-- Zalo Verification -->
-    <meta name="zalo-platform-site-verification" content="GUI20f7bBXzDbBOxYeaa65oOjqUmxcCPDZao" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vaschool.webnew.info.vn/received" />
+    <meta property="og:title" content="VA School – Xác nhận tham dự" />
+    <meta property="og:description" content="Xác nhận tham dự sự kiện VA School và xem số dự thưởng của bạn." />
+    <meta property="og:image" content="https://vaschool.webnew.info.vn/assets/images/share-banner.jpg" />
 
-    <!-- Meta cơ bản -->
-    <title>Danh sách khách mời – Check-in sự kiện</title>
-    <meta name="description" content="Check-in khách mời và rút thăm may mắn tại sự kiện.">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://vaschool.webnew.info.vn/received" />
+    <meta name="twitter:title" content="VA School – Xác nhận tham dự" />
+    <meta name="twitter:description" content="Xác nhận tham dự sự kiện VA School và xem số dự thưởng của bạn." />
+    <meta name="twitter:image" content="https://vaschool.webnew.info.vn/assets/images/share-banner.jpg" />
 
+    <!-- Zalo (Open Graph compatible) -->
+    <meta property="og:site_name" content="VA School" />
+    <meta property="og:locale" content="vi_VN" />
 
 
 </head>
+
 <body>
     @yield('content')
 </body>
+
 </html>
