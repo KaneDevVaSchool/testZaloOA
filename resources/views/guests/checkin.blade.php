@@ -15,10 +15,10 @@
         @endif
         </p>
         {{-- 
-    <p><strong>Họ tên:</strong> {{ $guest->full_name }}</p>
-    <p><strong>Số điện thoại:</strong> {{ $guest->phone }}</p>
+    <p><strong>Họ tên:</strong> {{ $dataCheckinCus->full_name }}</p>
+    <p><strong>Số điện thoại:</strong> {{ $dataCheckinCus->phone }}</p>
     <p><strong>Trạng thái:</strong> 
-        @if ($guest->status)
+        @if ($dataCheckinCus->status)
             <span class="text-green-600 font-bold">Đã đến</span>
         @else
             <span class="text-red-600 font-bold">Chưa đến</span>
@@ -51,7 +51,7 @@
                             "X-CSRF-TOKEN": "{{ csrf_token() }}"
                         },
                         body: JSON.stringify({
-                            qr_token: "{{ $guest->qr_token }}"
+                            qr_token: "{{ $dataCheckinCus->qr_token }}"
                         })
                     });
 
