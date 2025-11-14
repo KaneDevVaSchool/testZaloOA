@@ -11,7 +11,7 @@
         @if ($dataCheckinCus->status == 1)
             <p><strong>Họ tên:</strong> {{ $dataCheckinCus->full_name }}</p>
             <p><strong>Số điện thoại:</strong> {{ $dataCheckinCus->phone }}</p>
-            <p><strong>Trạng thái:</strong>
+      
         @endif
         </p>
         {{-- 
