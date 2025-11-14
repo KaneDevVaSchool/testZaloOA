@@ -2,48 +2,48 @@
 
 namespace App\Services;
 
-use App\Jobs\SendGuestArrivedNotification;
 use App\Models\Guest;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class GuestCheckInService
 {
     /**
-     * Scan QR token and mark guest as arrived
-     *
-     * @param string $qr_token
-     * @return Guest
-     * @throws \Exception
+     * Xử lý scan & check-in khách
      */
-    public function scan(string $qr_token): Guest
+    public function scan(string $qrToken): Guest
     {
-        return DB::transaction(function () use ($qr_token) {
-            // Lock guest row to prevent race condition
-            $guest = Guest::where('qr_token', $qr_token)->lockForUpdate()->firstOrFail();
+        return DB::transaction(function () use ($qrToken) {
 
+            $guest = Guest::where('qr_token', $qrToken)->firstOrFail();
+
+            // Đã check-in rồi → báo lỗi
             if ($guest->status) {
-                throw new \RuntimeException('Guest already arrived');
+                throw new \RuntimeException("Khách đã check-in trước đó.");
             }
 
-            // Generate unique random number
-            do {
-                $number = strtoupper(Str::random(8));
-            } while (Guest::where('number', $number)->exists());
+            // Sinh mã dự thưởng duy nhất
+            $guest->number = $this->generateUniqueNumber();
 
-            // Update guest
-            $guest->update([
-                'status' => true,
-                'arrived_at' => now(),
-                'number' => $number,
-            ]);
+            // Đánh dấu đã đến
+            $guest->status = true;
+            $guest->arrived_at = now();
 
-            $guest->refresh();
-
-            // Dispatch notification job
-            SendGuestArrivedNotification::dispatch($guest);
+            $guest->save();
 
             return $guest;
         });
+    }
+
+    /**
+     * Sinh mã dự thưởng unique
+     */
+    private function generateUniqueNumber(): string
+    {
+        do {
+            $code = strtoupper(Str::random(6));
+        } while (Guest::where('number', $code)->exists());
+
+        return $code;
     }
 }

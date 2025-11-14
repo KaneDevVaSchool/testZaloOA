@@ -10,6 +10,6 @@ class GuestSeeder extends Seeder
     public function run(): void
     {
         // Tạo 10 guest test
-        Guest::factory()->count(10)->create();
+        Guest::factory()->count(30)->create();
     }
 }

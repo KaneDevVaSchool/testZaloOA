@@ -19,6 +19,15 @@ return new class extends Migration {
             $table->string('qr_token')->unique(); // token/chuỗi ký để QR (không dùng id nguyên)
             $table->timestamp('invited_at')->nullable();
             $table->timestamp('arrived_at')->nullable();
+
+            $table->string('address')->nullable();
+            $table->string('code_staft')->nullable();
+            $table->string('custom_column3')->nullable();
+            $table->string('custom_column4')->nullable();
+
+            $table->unsignedBigInteger('department_id');
+            $table->foreign('department_id')->references('id')->on('departments');
+
             $table->timestamps();
         });
     }

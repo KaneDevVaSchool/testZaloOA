@@ -48,4 +48,8 @@ class Guest extends Model
         // URL để client quét — route bảo mật
         return route('guests.qr.show', ['qr_token' => $this->qr_token]);
     }
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
 }

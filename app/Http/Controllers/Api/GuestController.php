@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ScanGuestRequest;
+use App\Http\Resources\GuestResource;
 use App\Models\Guest;
 use App\Services\GuestCheckInService;
 use Illuminate\Http\Request;
@@ -19,33 +20,33 @@ class GuestController extends Controller
     }
 
     /**
-     * Lấy thông tin guest theo QR token
+     * Lấy thông tin guest theo QR
      */
     public function showByQr(string $qr_token)
     {
-        $guest = Guest::where('qr_token', $qr_token)->firstOrFail();
+        $guest = $this->findGuest($qr_token);
 
         return response()->json([
-            'ok' => true,
-            'guest' => $guest
+            'ok'   => true,
+            'data' => new GuestResource($guest)
         ]);
     }
 
     /**
-     * Lấy thông tin check-in khách
+     * Lấy thông tin dùng để check-in
      */
     public function checkInQRCode(string $qr_token)
     {
-        $guest = Guest::where('qr_token', $qr_token)->firstOrFail();
+        $guest = $this->findGuest($qr_token);
 
         return response()->json([
-            'ok' => true,
-            'guest' => $guest
+            'ok'   => true,
+            'data' => new GuestResource($guest)
         ]);
     }
 
     /**
-     * Scan QR và check-in
+     * Xử lý scan QR và check-in
      */
     public function scanQr(ScanGuestRequest $request)
     {
@@ -53,47 +54,53 @@ class GuestController extends Controller
             $guest = $this->checkInService->scan($request->validated()['qr_token']);
 
             return response()->json([
-                'ok' => true,
-                'guest' => $guest
+                'ok'   => true,
+                'data' => new GuestResource($guest->load('department'))
             ]);
         } catch (\RuntimeException $e) {
             return response()->json([
-                'ok' => false,
-                'message' => $e->getMessage()
+                'ok'      => false,
+                'message' => $e->getMessage(),
             ], 409);
         }
     }
 
     /**
-     * Sinh QR image (trả dưới dạng base64)
+     * Sinh QR trả về base64
      */
     public function qrImage(string $qr_token)
     {
-        $guest = Guest::where('qr_token', $qr_token)->firstOrFail();
+        $guest = $this->findGuest($qr_token);
         $url = route('api.guests.show', ['qr_token' => $guest->qr_token]);
 
         $svg = QrCode::size(300)->format('svg')->generate($url);
-        $base64 = 'data:image/svg+xml;base64,' . base64_encode($svg);
 
         return response()->json([
-            'ok' => true,
-            'qr_code' => $base64
+            'ok'       => true,
+            'qr_code'  => 'data:image/svg+xml;base64,' . base64_encode($svg)
         ]);
     }
 
     /**
-     * Lấy trạng thái guest (polling)
+     * Polling trạng thái
      */
     public function status(string $qr_token)
     {
-        $guest = Guest::where('qr_token', $qr_token)->firstOrFail();
+        $guest = $this->findGuest($qr_token);
 
         return response()->json([
-            'ok' => true,
-            'status' => (bool)$guest->status,
-            'number' => $guest->number,
-            'full_name' => $guest->full_name,
-            'phone' => $guest->phone,
+            'ok'   => true,
+            'data' => new GuestResource($guest)
         ]);
+    }
+
+    /**
+     * Helper load guest + department
+     */
+    private function findGuest(string $qr_token): Guest
+    {
+        return Guest::with('department')
+            ->where('qr_token', $qr_token)
+            ->firstOrFail();
     }
 }
