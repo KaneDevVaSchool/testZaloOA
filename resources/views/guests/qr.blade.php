@@ -63,14 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }).then(() => location.reload());
 
                 // Gửi lucky code về server nếu muốn lưu
-                // fetch("{{ route('guests.lucky') }}", {
-                //     method: "POST",
-                //     headers: {
-                //         "Content-Type": "application/json",
-                //         "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                //     },
-                //     body: JSON.stringify({ qr_token: "{{ $guest->qr_token }}", lucky_code: luckyCode })
-                // });
+      
 
             } else {
                 Swal.fire({
