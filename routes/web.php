@@ -1,5 +1,4 @@
-<?php
-
+<!-- 
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\GuestController;
@@ -31,4 +30,4 @@ Route::prefix('guests')->group(function () {
         ]);
     })->name('guests.status');
 
-});
+}); -->
