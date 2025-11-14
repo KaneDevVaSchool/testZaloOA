@@ -1,1 +1,0 @@
-<h1>chỗ này hiện qr thông tin , status code = 1, random number đã hiển thị  </h1>
